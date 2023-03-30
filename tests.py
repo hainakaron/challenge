@@ -126,6 +126,84 @@ class TestTask2(unittest.TestCase):
 
         self.assertDictEqual(merged_stats, expected_stats)
 
+    def test_merge_stats2(self):
+        stats1 = {
+            "count": 15,
+            "amount": 425,
+            "num_items": 12,
+            "gender": {
+                "F": {"count": 5, "amount": 225, "num_items": 7},
+                "M": {"count": 10, "amount": 200, "num_items": 5},
+            },
+            "currency": {
+                "EUR": {"count": 13, "amount": 175, "num_items": 6},
+                "USD": {"count": 2, "amount": 250, "num_items": 6},
+            },
+        }
+
+        stats2 = {
+            "count": 15,
+            "amount": 425,
+            "num_items": 12,
+            "gender": {
+                "F": {"count": 5, "amount": 225, "num_items": 7},
+                "M": {"count": 10, "amount": 200, "num_items": 5},
+            },
+            "currency": {
+                "EUR": {"count": 13, "amount": 175, "num_items": 6},
+                "USD": {"count": 2, "amount": 250, "num_items": 6},
+            },
+            "something_deep": {"deeper": {"the_deepest": {"hidden_treasure": 41, "mineral": {"gold": {"24k": 5}}}}},
+            "empty_object": {},
+        }
+
+        stats3 = {
+            "count": 15,
+            "amount": 450,
+            "num_items": 12,
+            "something_else": 30,
+            "gender": {
+                "F": {"count": 5, "amount": 225, "num_items": 7},
+                "M": {"count": 10, "amount": 200, "num_items": 5},
+            },
+            "currency": {
+                "EUR": {"count": 13, "amount": 175, "num_items": 6},
+                "USD": {"count": 2, "amount": 250, "num_items": 6},
+            },
+            "country_code": {"GB": {"count": 2, "amount": 10, "num_items": 2}},
+            "something_deep": {"deeper": {"the_deepest": {"hidden_treasure": 1, "mineral": {}}}},
+            "empty_object": {},
+        }
+
+        stats4 = {
+            "something_deep": {"deeper": {"the_deepest": {"hidden_treasure": 1, "mineral": {"gold":{"21k": 3}, "diamond":4}}}},
+        }
+
+        stats5 = {
+            "something_deep": {"deeper": {"the_deepest": {"hidden_treasure": 1, "mineral": {"gold":{"21k": 2}, "diamond":3}}}},
+        }
+
+        expected_stats = {
+            "count": 45,
+            "amount": 1300,
+            "num_items": 36,
+            "something_else": 30,
+            "gender": {
+                "F": {"count": 15, "amount": 675, "num_items": 21},
+                "M": {"count": 30, "amount": 600, "num_items": 15},
+            },
+            "currency": {
+                "EUR": {"count": 39, "amount": 525, "num_items": 18},
+                "USD": {"count": 6, "amount": 750, "num_items": 18},
+            },
+            "country_code": {"GB": {"count": 2, "amount": 10, "num_items": 2}},
+            "something_deep": {"deeper": {"the_deepest": {"hidden_treasure": 44, "mineral": {"gold":{"21k": 5, "24k":5}, "diamond":7}}}},
+            "empty_object": {},
+        }
+
+        merged_stats = merge_stats(stats1, stats2, stats3, stats4, stats5)
+
+        self.assertDictEqual(merged_stats, expected_stats)
 
 if __name__ == "__main__":
     unittest.main()
